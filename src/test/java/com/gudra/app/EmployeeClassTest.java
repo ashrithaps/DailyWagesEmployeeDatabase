@@ -6,13 +6,11 @@ import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import java.util.List;
 
 /**
  * Created by Ashritha on 11/9/2016.
  */
-
 public class EmployeeClassTest {
    @Test
     public void saveEmployeeDetailsTest(){
@@ -53,7 +51,7 @@ public class EmployeeClassTest {
       session.getTransaction().commit();
 
       session.close();
-      Assert.assertEquals(550, empDetails.getSalary());
+      Assert.assertEquals(500, empDetails.getSalary());
    }
 
    @Test
@@ -70,7 +68,6 @@ public class EmployeeClassTest {
 
       session.close();
    }
-
 
    @Test
    public void deleteEmployeeTest(){
