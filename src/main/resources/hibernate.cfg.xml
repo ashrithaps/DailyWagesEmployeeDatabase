@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration SYSTEM
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -22,7 +22,8 @@
             muralips
         </property>
 
-        <!-- List of XML mapping files -->
+        <!-- List of class mapping files -->
+        <mapping class="com.gudra.app.DailyRecords"/>
         <mapping class="com.gudra.app.Emp"/>
 
     </session-factory>
