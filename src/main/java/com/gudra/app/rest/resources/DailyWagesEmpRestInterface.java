@@ -1,9 +1,9 @@
 package com.gudra.app.rest.resources;
 
+import com.gudra.app.DailyRecords;
 import com.gudra.app.Emp;
+import com.gudra.app.main.DailyRecordsDAO;
 import com.gudra.app.main.EmployeeDAO;
-import javafx.application.Application;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,17 +21,17 @@ public class DailyWagesEmpRestInterface {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveEmpDetails(Emp employee){
         employee.setName(employee.getName());
-       /* ObjectMapper mapper = new ObjectMapper();
-        Emp employeeObj = new Emp();
+       Response response = null;
         try {
-            employeeObj = mapper.readValue(jsonData, Emp.class);
-        } catch (IOException e) {
+            EmployeeDAO empDao = new EmployeeDAO();
+            empDao.saveEmployeeDetails(employee);
+            response = Response.status(200).build();
+        } catch (RuntimeException e) {
             e.printStackTrace();
-        }*/
-        EmployeeDAO empDao = new EmployeeDAO();
-        empDao.saveEmployeeDetailsTest(employee);
-       // employeeObj.setName(jsonData);
-        return Response.status(200).build();
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return response;
     }
 
     @GET
@@ -40,5 +40,41 @@ public class DailyWagesEmpRestInterface {
     public List<Emp> listAllEmployees(){
         EmployeeDAO empDao = new EmployeeDAO();
         return empDao.listAllEmployees();
+    }
+
+    @POST
+    @Path("deleteAllEmployees")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteAllEmps(){
+        EmployeeDAO employeeDAO= new EmployeeDAO();
+        employeeDAO.deleteAllEmployees();
+        return Response.status(200).build();
+    }
+
+    @POST
+    @Path("deleteSelectedEmployees")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteSelectedEmps(List<Emp> empList){
+        EmployeeDAO employeeDAO= new EmployeeDAO();
+        employeeDAO.deleteSelectedEmployee(empList);
+        return Response.status(200).build();
+    }
+
+    @POST
+    @Path("updateEmployeeDetails")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateEmpDetails(Emp emp){
+        EmployeeDAO employeeDAO= new EmployeeDAO();
+        employeeDAO.updateEmployeeDetails(emp);
+        return Response.status(200).build();
+    }
+
+    @PUT
+    @Path(("saveDailyRecordsForEachEmp"))
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveDailyRecordsForEachEmp(DailyRecords dailyRecords){
+        DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
+        dailyRecordsDAO.saveDailyRecordsDetailsForEachEmployee(dailyRecords);
+        return Response.status(200).build();
     }
 }
