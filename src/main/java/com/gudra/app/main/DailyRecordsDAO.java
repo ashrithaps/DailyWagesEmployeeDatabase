@@ -23,10 +23,22 @@ public class DailyRecordsDAO {
         dailyRec.setEmployee(emp);
         dailyRec.setNote(dailyRecord.getNote());
         dailyRec.setWithdrawal(dailyRecord.getWithdrawal());
+        dailyRec.setWage(dailyRecord.getWage());
         session.persist(dailyRec);
        // java.io.Serializable todaysDate = new Date(new java.util.Date().getTime());
-      //  DailyRecords dailyRecord = (DailyRecords) session.createCriteria(DailyRecords.class).add(Restrictions.eq("Employee_Name",empName)).add(Restrictions.eq("TodaysDate",todaysDate));
+      //
         session.getTransaction().commit();
         session.close();
+    }
+
+    public DailyRecords getDailyRecordDetailsForEachEmployee(String empName, Date dateOnWhichRecordWasCreated){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        DailyRecords dailyRecord = (DailyRecords) session.createQuery("from DailyRecords where Employee_Name = '"+empName+"' and TodaysDate='"+dateOnWhichRecordWasCreated+"'").uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return dailyRecord;
+
     }
 }
