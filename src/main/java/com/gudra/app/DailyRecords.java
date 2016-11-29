@@ -1,7 +1,9 @@
 package com.gudra.app;
 
+import org.hibernate.annotations.Generated;
+
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Ashritha on 10/28/2016.
@@ -9,14 +11,18 @@ import java.util.Date;
 @Entity
 @Table(name="dailyrecords")
 public class DailyRecords {
+
     @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private int id;
     @Column(name = "Date")
     private Date TodaysDate;
     private int Wage;
     private int Withdrawal;
     private  String Note;
 
-    @OneToOne
+    @OneToOne (cascade = javax.persistence.CascadeType.ALL)
     @JoinColumn(name = "Employee_Name")
     private Emp employee;
 
@@ -66,6 +72,15 @@ public class DailyRecords {
     public void setNote(String note) {
         this.Note = note;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
 
 }
