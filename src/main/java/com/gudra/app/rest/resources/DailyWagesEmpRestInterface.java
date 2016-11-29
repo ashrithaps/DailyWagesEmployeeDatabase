@@ -9,6 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -76,5 +77,28 @@ public class DailyWagesEmpRestInterface {
         DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
         dailyRecordsDAO.saveDailyRecordsDetailsForEachEmployee(dailyRecords);
         return Response.status(200).build();
+    }
+
+    /*@GET
+    @Path("getDailyRecordDetailForSpecifiedEmployee/{empname}/{date}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date")Date dateOnWhichRecordIsCreated){
+        try {
+            DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
+            DailyRecords record = dailyRecordsDAO.getDailyRecordDetailsForEachEmployee(empName, dateOnWhichRecordIsCreated);
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.print(e);
+        }
+    }*/
+
+    @GET
+    @Path("getDailyRecordDetailForSpecifiedEmployee/{empname}/{date}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DailyRecords getDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date") Date dateOnWhichRecordWasCreated){
+            DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
+        System.out.print(empName);
+            DailyRecords record = dailyRecordsDAO.getDailyRecordDetailsForEachEmployee(empName,dateOnWhichRecordWasCreated);
+            return record;
     }
 }
