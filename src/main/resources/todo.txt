@@ -1,0 +1,3 @@
+1. junit tests not successful on running all the tests together
+2. tomcat embedded runner not working-issue throwing context.xml not found
+3. do i need to write separate rest apis to update wage /withdrawal in daily records???
