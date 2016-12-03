@@ -11,19 +11,14 @@ import java.util.List;
  * Created by Ashritha on 11/26/2016.
  */
 public class EmployeeDAO {
-    public void saveEmployeeDetailsTest(Emp employeeDetails){
+    public void saveEmployeeDetails(Emp employeeDetails){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Emp employee1 =new Emp();
         employee1.setName(employeeDetails.getName());
-        employee1.setSalary(500);
+        employee1.setSalary(employeeDetails.getSalary());
         session.persist(employee1);
-       /* Emp employee2 =new Emp();
-        employee2.setName("Asha");
-        employee2.setSalary(600);
-        session.persist(employee2);*/
-
         session.getTransaction().commit();
         session.close();
     }
@@ -36,5 +31,39 @@ public class EmployeeDAO {
         session.getTransaction().commit();
         session.close();
         return employees;
+    }
+
+    public void deleteAllEmployees(){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Emp> employees=session.createQuery("from Emp").list();
+        for(int i=0;i<employees.size();i++)
+            session.delete(employees.get(i));
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void deleteSelectedEmployee(List<Emp> empList){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        for(int i=0;i<empList.size();i++) {
+            Emp employee = (Emp) session.get(Emp.class, empList.get(i).getName());
+            session.delete(employee);
+        }
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void updateEmployeeDetails(Emp employee) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Emp emp= (Emp)session.get(Emp.class, employee.getName());
+        emp.setSalary(400);
+        session.update(employee);
+        session.getTransaction().commit();
+        session.close();
     }
 }

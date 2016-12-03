@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  * Created by Ashritha on 11/28/2016.
@@ -31,14 +32,40 @@ public class DailyRecordsDAO {
         session.close();
     }
 
-    public DailyRecords getDailyRecordDetailsForEachEmployee(String empName, Date dateOnWhichRecordWasCreated){
+    public List<DailyRecords> getDailyRecordDetailsForEachEmployee(String empName){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<DailyRecords> dailyRecords = (List<DailyRecords>) session.createQuery("from DailyRecords where Employee_Name = '"+empName+"'").list();
+        session.getTransaction().commit();
+        session.close();
+        return dailyRecords;
+
+    }
+
+
+    public void updateDailyRecordDetailsForEachEmployee(String empName, Date dateOnWhichRecordWasCreated,DailyRecords recordDetails) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         DailyRecords dailyRecord = (DailyRecords) session.createQuery("from DailyRecords where Employee_Name = '"+empName+"' and TodaysDate='"+dateOnWhichRecordWasCreated+"'").uniqueResult();
+        //dailyRecord
         session.getTransaction().commit();
         session.close();
-        return dailyRecord;
+    }
 
+    public float getTotalWageForSpecifiedEmp(String empName) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<DailyRecords> dailyRecords = (List<DailyRecords>) session.createQuery("from DailyRecords where Employee_Name = '"+empName+"'").list();
+        float totalWage = 0;
+        for(int i=0;i<dailyRecords.size();i++)
+        {
+            totalWage += dailyRecords.get(i).getWage();
+        }
+        session.getTransaction().commit();
+        session.close();
+        return totalWage;
     }
 }
