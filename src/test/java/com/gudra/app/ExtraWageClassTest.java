@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Ashritha on 11/18/2016.
@@ -17,7 +17,7 @@ public class ExtraWageClassTest {
 
     SessionFactory sessionFactory;
     private Session session;
-    private  Date todaysDate = new Date();
+    private  Date todaysDate = new Date(new java.util.Date().getTime());
 
     @Before
     public void beginHibernateTransaction(){

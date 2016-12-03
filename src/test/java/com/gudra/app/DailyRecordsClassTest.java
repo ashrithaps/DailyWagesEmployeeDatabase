@@ -1,83 +1,87 @@
 package com.gudra.app;
 
 import com.gudra.app.util.HibernateUtil;
+import junit.framework.Assert;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 /**
  * Created by Ashritha on 11/10/2016.
  */
 public class DailyRecordsClassTest {
-    @Test
-    public void saveDailyRecordsDetailsForEachEmpTest(){
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
+    static SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static Session session;
+    private static Date todaysDate = new Date(new java.util.Date().getTime());
+    @BeforeClass
+    public static void createNewHibernateSession(){
+        System.out.print("Inside createNewHibernateSession\n ");
+        session = sessionFactory.openSession();
+
+
+    }
+
+    @Before
+    public void beginHibernateTransaction(){
+        System.out.print("Inside beginHibernateTransaction\n ");
         session.beginTransaction();
-
-
-       deleteEmployeeTest();
-       DailyRecords record = new DailyRecords();
+        DailyRecords record = new DailyRecords();
         Emp employee = new Emp();
         employee.setName("Ananda");
         employee.setSalary(600);
-        record.setTodaysDate(new Date());
+        session.save(employee);
+        record.setTodaysDate(todaysDate);
         record.setWage(700);
         record.setEmployee(employee);
         record.setWithdrawal(600);
         record.setNote("salary");
 
-        session.save(record);
-        session.getTransaction().commit();
+        session.persist(record);
 
-        session.close();
+    }
 
+    @Test
+    public void saveDailyRecordsDetailsForEachEmpTest() {
+        System.out.print("Inside saveDailyRecordsDetailsForEachEmpTest\n");
+        DailyRecords dailyRecord = (DailyRecords) session.get(DailyRecords.class,todaysDate);
+         session.getTransaction().commit();
+
+        Assert.assertEquals("Ananda", dailyRecord.getEmployee().getName());
     }
 
     @Test
     public void updateDailyRecordsDetailsForEachEmpTest(){
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
 
-        DailyRecords record = (DailyRecords) session.createQuery("from DailyRecords where TodaysDate='2016-11-11' and employee='Ananda'").uniqueResult();
-        record.setWithdrawal(800);
-        record.setNote("salary");
+        DailyRecords dailyRecord = (DailyRecords) session.get(DailyRecords.class,todaysDate);
+        dailyRecord.setWithdrawal(800);
+        dailyRecord.setNote("salary");
 
-        session.update(record);
+        session.update(dailyRecord);
         session.getTransaction().commit();
 
-        session.close();
-
+        Assert.assertEquals(800, dailyRecord.getWithdrawal());
     }
 
     @Test
     public void deleteEmployeeTest(){
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-
-        List<DailyRecords> recordsList = new ArrayList<DailyRecords>();
-        recordsList = (List<DailyRecords>) session.createQuery("from DailyRecords where TodaysDate='2016-11-11' and employee='Ananda'").list();
-        if(recordsList.size()>0) {
-            for (int i = 0; i < recordsList.size(); i++) {
-                Session deleteSession = sessionFactory.openSession();
-                deleteSession.beginTransaction();
-                DailyRecords dailyRecord = recordsList.get(i);
-                deleteSession.delete(dailyRecord);
-                deleteSession.getTransaction().commit();
-                deleteSession.close();
-            }
-        }
+        DailyRecords dailyRecord = (DailyRecords) session.get(DailyRecords.class,todaysDate);
+        session.delete(dailyRecord);
         session.getTransaction().commit();
+    }
+    @After
+    public void clearSession(){
+        session.flush();
+        session.clear();
 
+    }
+
+
+    @AfterClass
+    public static void closeHibernateSession(){
         session.close();
-
-
     }
 }
