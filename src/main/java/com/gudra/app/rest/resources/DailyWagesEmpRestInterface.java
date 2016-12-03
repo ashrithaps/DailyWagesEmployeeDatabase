@@ -2,8 +2,10 @@ package com.gudra.app.rest.resources;
 
 import com.gudra.app.DailyRecords;
 import com.gudra.app.Emp;
+import com.gudra.app.ExtraWage;
 import com.gudra.app.main.DailyRecordsDAO;
 import com.gudra.app.main.EmployeeDAO;
+import com.gudra.app.main.ExtraWageDAO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -79,26 +81,75 @@ public class DailyWagesEmpRestInterface {
         return Response.status(200).build();
     }
 
-    /*@GET
-    @Path("getDailyRecordDetailForSpecifiedEmployee/{empname}/{date}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date")Date dateOnWhichRecordIsCreated){
-        try {
-            DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
-            DailyRecords record = dailyRecordsDAO.getDailyRecordDetailsForEachEmployee(empName, dateOnWhichRecordIsCreated);
-        } catch (Exception e){
-            e.printStackTrace();
-            System.out.print(e);
-        }
-    }*/
 
     @GET
-    @Path("getDailyRecordDetailForSpecifiedEmployee/{empname}/{date}")
+    @Path("getDailyRecordDetailForSpecifiedEmployee/{empname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DailyRecords getDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date") Date dateOnWhichRecordWasCreated){
+    public List<DailyRecords> getDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName){
             DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
         System.out.print(empName);
-            DailyRecords record = dailyRecordsDAO.getDailyRecordDetailsForEachEmployee(empName,dateOnWhichRecordWasCreated);
+            List<DailyRecords> record = dailyRecordsDAO.getDailyRecordDetailsForEachEmployee(empName);
             return record;
+    }
+
+    @GET
+    @Path("getTotalWageDetailForSpecifiedEmployee/{empname}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public float getTotalWageDetailForSpecifiedEmployee(@PathParam("empname") String empName){
+        DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
+        System.out.print(empName);
+        float totalWage = dailyRecordsDAO.getTotalWageForSpecifiedEmp(empName);
+        return totalWage;
+    }
+
+    @POST
+    @Path("updateDailyRecordDetailForSpecifiedEmployee/{empname}/{date}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateDailyRecordDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date") Date dateOnWhichRecordWasCreated,DailyRecords recordDetails){
+        DailyRecordsDAO dailyRecordsDAO = new DailyRecordsDAO();
+        dailyRecordsDAO.updateDailyRecordDetailsForEachEmployee(empName,dateOnWhichRecordWasCreated,recordDetails);
+        System.out.print(recordDetails.getNote());
+        System.out.print(recordDetails.getEmployee());
+        System.out.print(recordDetails.getWage());
+        System.out.print(recordDetails.getWithdrawal());
+        return Response.status(200).build();
+    }
+
+    @PUT
+    @Path(("saveExtraWageForEachEmp"))
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveExtraWageForEachEmp(ExtraWage extraWage){
+        ExtraWageDAO extraWageDAO = new ExtraWageDAO();
+        extraWageDAO.saveExtraWageDetailsForEachEmployee(extraWage);
+        return Response.status(200).build();
+    }
+
+
+    @GET
+    @Path("getExtraWageDetailForSpecifiedEmployee/{empname}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ExtraWage> getExtraWageDetailForSpecifiedEmployee(@PathParam("empname") String empName){
+        ExtraWageDAO extraWageDAO = new ExtraWageDAO();
+        System.out.print(empName);
+        List<ExtraWage> wageList = extraWageDAO.getExtraWageDetailsForEachEmployee(empName);
+        return wageList;
+    }
+
+    @GET
+    @Path("getTotalExtraWageDetailForSpecifiedEmployee/{empname}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public float getTotalExtraWageDetailForSpecifiedEmployee(@PathParam("empname") String empName){
+        ExtraWageDAO extraWageDAO = new ExtraWageDAO();
+        float totalExtraWage = extraWageDAO.getTotalExtraWageForSpecifiedEmp(empName);
+        return totalExtraWage;
+    }
+
+    @POST
+    @Path("updateExtraWageDetailForSpecifiedEmployee/{empname}/{date}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateExtraWageDetailForSpecifiedEmployee(@PathParam("empname") String empName, @PathParam("date") Date dateOnWhichRecordWasCreated,ExtraWage extraWage){
+        ExtraWageDAO extraWageDAO = new ExtraWageDAO();
+        extraWageDAO.updateExtraWageDetailForSpecifiedEmployee(empName, dateOnWhichRecordWasCreated, extraWage);
+        return Response.status(200).build();
     }
 }
