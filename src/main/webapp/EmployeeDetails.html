@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/EmployeeDetail.css"/>
+    <script type="text/javascript" src="js/EmployeeDetail.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/uploadFile.js"></script>
+    <link href="css/jquery-ui.min.css" rel="stylesheet"/>
+    <script>
+        var employee = new Employee();
+function displayImage(image){
+	for(var i = 0; i<image.files.length; i++){
+			var file =  image.files[i];
+			var empImage = document.getElementById('empImage');
+			empImage.file = file;
+			// Using FileReader to display the image content
+    var reader = new FileReader();
+    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(empImage);
+    reader.readAsDataURL(file);
+	}
+	}
+    </script>
+</head>
+<body>
+<h1>Employee Details</h1>
+<div>
+    <div class="imageHolder">
+        <img id="empImage" width="200px" height="200px"><br/>
+        <div id="uploadVideoContainer" class="indexVideoContainer">
+
+            <form id="upload_form" enctype="multipart/form-data" method="post">
+                <input type="file" name="file1" id="uploadEmpImage" onchange = "displayImage(this)" style="height: 32px; width: 500px;"><br>
+                <input type="button" value="Upload File" onclick="uploadFile()" style="height: 32px; width: 120px;">
+                <progress id="progressBar" value="0" max="100" style="width:300px; height: 17px"></progress>
+                <h3 id="status"></h3>
+                <p id="loaded_n_total"></p>
+            </form>
+
+        </div>
+    </div>
+    <div class="empDetailsHolder">
+        <div><label>Name : </label>
+        <input type="text" id="empName"  tabindex="0">
+        </div>
+        <div><label>Salary : </label>
+            <input type="text" id="empSalary">
+        </div>
+        <div><label>Address : </label>
+            <input type="text" id="empAddr">
+        </div>
+        <div><label>Contact No : </label>
+            <input type="text" id="empContactNo">
+        </div>
+        <div class="buttonHolder">
+            <input id="saveEmpDetailsBtn" type="button" value="Save" onclick="employee.addNewEmpDetails()">
+            <input id= "updateEmpDetailsBtn" type="button" value="Update" onclick="employee.updateEmpDetails()" disabled>
+            <input id= "deleteEmpDetailsBtn" type="button" value="Delete" onclick="employee.deleteEmployee()" disabled>
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
