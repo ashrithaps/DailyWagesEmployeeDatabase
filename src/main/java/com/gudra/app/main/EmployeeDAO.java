@@ -6,11 +6,17 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Ashritha on 11/26/2016.
+ * Perform CRUD operations on Employee entity
  */
 public class EmployeeDAO {
+    /**
+    *save employee details
+    * @param employeeDetails (name and salary)
+     */
     public void saveEmployeeDetails(Emp employeeDetails){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -18,10 +24,17 @@ public class EmployeeDAO {
         Emp employee1 =new Emp();
         employee1.setName(employeeDetails.getName());
         employee1.setSalary(employeeDetails.getSalary());
+        employee1.setAddress(employeeDetails.getAddress());
+        employee1.setContactNo(employeeDetails.getContactNo());
         session.persist(employee1);
         session.getTransaction().commit();
         session.close();
     }
+
+    /**
+     * list all employees
+     * return list of all employees
+     */
 
     public List<Emp> listAllEmployees(){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -33,6 +46,9 @@ public class EmployeeDAO {
         return employees;
     }
 
+    /**
+     * delete all employees from the database
+     */
     public void deleteAllEmployees(){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -44,25 +60,43 @@ public class EmployeeDAO {
         session.close();
     }
 
-    public void deleteSelectedEmployee(List<Emp> empList){
+    /**
+     * delete selected employee
+     * @param empNames
+     */
+    public String deleteSelectedEmployee(String empNames){
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        for(int i=0;i<empList.size();i++) {
-            Emp employee = (Emp) session.get(Emp.class, empList.get(i).getName());
-            session.delete(employee);
+        String message ="";
+        for(String empName: empNames.split(",")){
+            Emp employee = (Emp) session.get(Emp.class, empName);
+            if(employee!=null) {
+                session.delete(employee);
+                message = "Employee deleted successfully";
+            }
+            else
+                message = "Employee does not exists";
         }
         session.getTransaction().commit();
         session.close();
+        return message ;
     }
 
-    public void updateEmployeeDetails(Emp employee) {
+    /**
+     * update employee details
+     * @param employeeName
+     * @param employee
+     */
+    public void updateEmployeeDetails(String employeeName, Emp employee) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Emp emp= (Emp)session.get(Emp.class, employee.getName());
-        emp.setSalary(400);
-        session.update(employee);
+        Emp emp= (Emp)session.get(Emp.class, employeeName);
+        emp.setSalary(employee.getSalary());
+        emp.setAddress(employee.getAddress());
+        emp.setContactNo(employee.getContactNo());
+        session.update(emp);
         session.getTransaction().commit();
         session.close();
     }
