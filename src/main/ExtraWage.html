@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="js/ExtraWage.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+    <link href="css/jquery-ui.min.css" rel="stylesheet"/>
+
+    <script>
+    var extraWage = new ExtraWage();
+    </script>
+</head>
+<body>
+<div id="extrawageRecordHolder">
+    <div><label>Employee Name : </label>
+        <input type="text" id="empName">
+    </div>
+    <div><label>Date : </label>
+        <input type="text" id="dateOfRecord" >
+    </div>
+    <div><label>Amount Paid : </label>
+        <input type="text" id="amountPaid">
+    </div>
+    <div><label>Note : </label>
+        <input type="text" id="note">
+    </div>
+
+</div>
+<div class="buttonHolder">
+    <input id="saveDailyRecordBtn" type="button" value="Save" onclick="extraWage.addNewExtraWageDetails()" >
+    <input type="button" value="Update" onclick="extraWage.updateExtraWageDetails()">
+    <input type="button" value="See Reports">
+
+</div>
+</body>
+</html>

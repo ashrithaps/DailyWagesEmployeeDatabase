@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script type="text/javascript" src="js/DailyRecords.js"></script>
+    <script type="text/javascript" src="js/Reports.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+    <link href="css/jquery-ui.min.css" rel="stylesheet"/>
+    <script src="js/jquery.canvasjs.min.js"></script>
+    <script>
+
+    var report = new Reports();
+     window.onload = function() {
+     var queryString = decodeURIComponent(window.location.search);
+queryString = queryString.substring(1);
+     report.getChartDetails(queryString);
+     };
+</script>
+</head>
+<body>
+<div id="pieChartContainer" style="height: 300px; width: 100%;"></div>
+<div id="barChartContainer" style="height: 300px; width: 100%;"></div>
+
+
+</body>
+</html>
